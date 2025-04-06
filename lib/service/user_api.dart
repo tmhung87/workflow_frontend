@@ -19,16 +19,6 @@ class UserApiService {
     return jsonDecode(response.body);
   }
 
-  static Future<Map<String, dynamic>> createUser(
-    Map<String, dynamic> user,
-  ) async {
-    final response = await http.post(
-      Uri.parse('$_apiUrl/users'),
-      body: jsonEncode(user),
-    );
-    return jsonDecode(response.body);
-  }
-
   static Future<Map<String, dynamic>> updateUser(
     String id,
     Map<String, dynamic> user,
@@ -93,35 +83,25 @@ class UserApiService {
     return jsonDecode(response.body);
   }
 
-  static Future<Map<String, dynamic>> addUser(
-    String staffId,
-    String name,
-    String email,
-    String password,
-    String division,
-    String department,
-    String position,
-    String status,
-    String token,
-  ) async {
-    final response = await http.post(
-      Uri.parse('$_apiUrl/users'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-        'staffId': staffId,
-        'name': name,
-        'email': email,
-        'password': password,
-        'division': division,
-        'department': department,
-        'position': position,
-        'status': status,
-      }),
-    );
-    return jsonDecode(response.body);
+  static Future<Map<String, dynamic>> createUser({
+    required User user,
+    required String token,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_apiUrl/user'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(user.toMap()),
+      );
+      var res = jsonDecode(response.body);
+
+      return res;
+    } catch (e) {
+      return {'message': e};
+    }
   }
 
   static Future<List<User>> findUser({

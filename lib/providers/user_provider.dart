@@ -23,30 +23,14 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addUser(
-    String staffId,
-    String name,
-    String email,
-    String password,
-    String division,
-    String department,
-    String position,
-    String status,
-  ) async {
+  Future<Map<String, dynamic>> createUser(User user) async {
     final storage = FlutterSecureStorage();
     final token = await storage.read(key: 'token');
-    final user = await UserApiService.addUser(
-      staffId,
-      name,
-      email,
-      password,
-      division,
-      department,
-      position,
-      status,
-      token ?? '',
-    );
-    notifyListeners();
+    if (token == null) {
+      return {};
+    }
+    final map = await UserApiService.createUser(user: user, token: token);
+    return map;
   }
 
   User? _selectedUser;

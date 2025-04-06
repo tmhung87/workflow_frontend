@@ -5,8 +5,13 @@ import 'package:provider/provider.dart';
 import 'package:workflow/providers/auth_provider.dart';
 import 'package:workflow/providers/user_provider.dart';
 import 'package:workflow/styles/colors.dart';
+import 'package:workflow/styles/strings.dart';
 import 'package:workflow/views/home/homepage.dart';
 import 'package:workflow/views/auth/loginpage.dart';
+import 'package:workflow/views/task/taskmanagerpage.dart';
+import 'package:workflow/views/user/useraddpage.dart';
+import 'package:workflow/views/user/userdetailpage.dart';
+import 'package:workflow/views/user/usermanagerpage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Đảm bảo Flutter được khởi tạo trước
@@ -28,7 +33,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+
+      title: 'Work Flow Manager',
       scrollBehavior: MaterialScrollBehavior().copyWith(
         dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch},
       ),
@@ -36,12 +43,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
         useMaterial3: false,
       ),
-      initialRoute: '/login',
-      debugShowCheckedModeBanner: false,
-      routes: {
-        '/login': (context) => LoginPage(),
-        '/home': (context) => HomePage(),
-      },
+
+      home: LoginPage(),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:workflow/widget/iconbutton2.dart';
+import 'package:workflow/widget/mybutton.dart';
+import 'package:workflow/widget/myiconbutton.dart';
 
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key, this.actions, this.sideBar, this.child});
@@ -29,40 +30,40 @@ class _MainLayoutState extends State<MainLayout> {
         final width = constraints.maxWidth;
         final isMobile = width < 550;
 
-        if (widget.sideBar != null) {
+        if (isMobile && widget.sideBar != null) {
           actions = [
-            IconButton2(
+            MyButton(
               child: Icon(
                 _isSideBarOpen
-                    ? Icons.format_indent_increase_outlined
-                    : Icons.format_indent_decrease_outlined,
+                    ? Icons.view_sidebar_outlined
+                    : Icons.view_sidebar_outlined,
               ),
-              onPressed: () => setState(() => _isSideBarOpen = !_isSideBarOpen),
+              onPressed:
+                  () async => setState(() => _isSideBarOpen = !_isSideBarOpen),
             ),
             ...widget.actions ?? [],
           ];
+        } else {
+          actions = widget.actions ?? [];
         }
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (actions.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey.shade300.withValues(alpha: 0.6),
+              Container(
+                decoration: BoxDecoration(color: Colors.grey.shade300),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: actions,
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Wrap(
-                    alignment: WrapAlignment.start,
-                    runAlignment: WrapAlignment.start,
-                    crossAxisAlignment: WrapCrossAlignment.start,
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: actions,
                   ),
                 ),
               ),
@@ -72,15 +73,15 @@ class _MainLayoutState extends State<MainLayout> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   widget.sideBar != null
-                      ? _isSideBarOpen
+                      ? _isSideBarOpen || !isMobile
                           ? SizedBox(
                             width: !isMobile ? _sideBarWidth : width,
                             child: widget.sideBar,
                           )
                           : SizedBox()
                       : SizedBox(),
-                  widget.sideBar != null && !isMobile
-                      ? _isSideBarOpen
+                  widget.sideBar != null
+                      ? !isMobile
                           ? GestureDetector(
                             onTap:
                                 () => setState(

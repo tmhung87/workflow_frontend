@@ -4,26 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-class DropdownButton2 extends StatefulWidget {
-  const DropdownButton2({
+class MyDropdownButton extends StatefulWidget {
+  const MyDropdownButton({
     super.key,
     required this.label,
     required this.items,
-    required this.onChanged,
-    required this.controller,
-    required this.value,
+    this.controller,
   });
   final String label;
   final List<String> items;
-  final Function(String) onChanged;
-  final TextEditingController controller;
-  final String value;
+  final TextEditingController? controller;
 
   @override
-  State<DropdownButton2> createState() => _DropdownButton2State();
+  State<MyDropdownButton> createState() => _MyDropdownButtonState();
 }
 
-class _DropdownButton2State extends State<DropdownButton2> {
+class _MyDropdownButtonState extends State<MyDropdownButton> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,14 +28,11 @@ class _DropdownButton2State extends State<DropdownButton2> {
         builder: (context, constraints) {
           return DropdownMenu<String>(
             enabled: true,
-            enableFilter: true,
-            enableSearch: true,
             trailingIcon: Icon(Icons.arrow_drop_down),
             selectedTrailingIcon: Icon(Icons.arrow_drop_up),
             menuHeight: 250,
             width: constraints.maxWidth + 24,
             label: Text(widget.label),
-
             inputDecorationTheme: InputDecorationTheme(
               floatingLabelBehavior: FloatingLabelBehavior.always,
               isDense: true,
@@ -51,7 +44,6 @@ class _DropdownButton2State extends State<DropdownButton2> {
                 widget.items.map((String item) {
                   return DropdownMenuEntry<String>(value: item, label: item);
                 }).toList(),
-            onSelected: (value) => widget.onChanged(value ?? ''),
           );
         },
       ),
@@ -739,7 +731,7 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
           child: widget.leadingIcon ?? const SizedBox.shrink(),
         );
 
-        final Widget textField = TextField(
+        final Widget textField = TextFormField(
           key: _anchorKey,
           enabled: widget.enabled,
           mouseCursor: effectiveMouseCursor,
@@ -753,6 +745,16 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
           style: effectiveTextStyle,
           controller: _localTextEditingController,
           onEditingComplete: _handleEditingComplete,
+          validator: (value) {
+            if (value == null ||
+                value.isEmpty ||
+                !widget.dropdownMenuEntries
+                    .map((e) => e.label)
+                    .contains(value)) {
+              return "Please select a valid option";
+            }
+            return null;
+          },
           onTap:
               !widget.enabled
                   ? null

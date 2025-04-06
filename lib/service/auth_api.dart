@@ -15,7 +15,7 @@ class AuthApiService {
     final response = await http.post(
       Uri.parse('$_apiUrl/auth/login'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'staff_id': staffId, 'password': password}),
+      body: jsonEncode({'staffId': staffId, 'password': password}),
     );
     print(response.body);
     return jsonDecode(response.body);

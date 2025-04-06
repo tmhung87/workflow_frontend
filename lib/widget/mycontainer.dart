@@ -21,7 +21,6 @@ class _MyContainerState extends State<MyContainer> {
   bool isExpanded = true;
   @override
   Widget build(BuildContext context) {
-    print('MyContainer build');
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Container(
@@ -42,8 +41,7 @@ class _MyContainerState extends State<MyContainer> {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300),
-                  color: Colors.grey.shade100,
+                  color: Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -62,7 +60,7 @@ class _MyContainerState extends State<MyContainer> {
                     ),
 
                     Icon(
-                      isExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                      !isExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down,
                       size: 24,
                       color: Theme.of(context).colorScheme.primary,
                     ),

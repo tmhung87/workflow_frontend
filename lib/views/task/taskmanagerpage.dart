@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workflow/widget/mydrawer.dart';
 
 class TaskManagerPage extends StatefulWidget {
   const TaskManagerPage({super.key});
@@ -10,6 +11,6 @@ class TaskManagerPage extends StatefulWidget {
 class _TaskManagerPageState extends State<TaskManagerPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(appBar: AppBar(), drawer: MyDrawer());
   }
 }
