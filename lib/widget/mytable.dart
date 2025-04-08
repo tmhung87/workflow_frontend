@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:excel/excel.dart' hide Border;
-import 'package:flutter/material.dart';
-import 'package:workflow/utils/exportexcel.dart';
-import 'package:workflow/utils/getdownloadfolder.dart';
+import 'package:flutter/foundation.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:workflow/widget/myiconbutton.dart';
 
 class MyTable extends StatefulWidget {
@@ -13,12 +14,14 @@ class MyTable extends StatefulWidget {
     required this.data,
     this.onTap,
     this.alignments = const {},
+    this.splitindex = 30,
   });
   final List<List<String>> data;
   final List<String> header;
   final Map<int, double> columnWidths;
   final Function(int index)? onTap;
   final Map<int, AlignmentGeometry> alignments;
+  final int splitindex;
   @override
   State<MyTable> createState() => _MyTableState();
 }
@@ -32,6 +35,8 @@ class _MyTableState extends State<MyTable> {
   String _query = '';
   int _selectFilterIndex = 0;
   Map<int, double> _dx = {};
+  final _scrollControler = ScrollController();
+  int _count = 0;
   @override
   void initState() {
     // TODO: implement initState
@@ -39,6 +44,26 @@ class _MyTableState extends State<MyTable> {
     for (var i = 0; i < widget.header.length; i++) {
       _dx[i] = 0;
       _columnWidths[i] = 100;
+    }
+    _count = widget.splitindex;
+
+    _scrollControler.addListener(() => _onScroll());
+  }
+
+  void _onScroll() {
+    final position = _scrollControler.position;
+    if (position.pixels == position.maxScrollExtent) {
+      if (_count < widget.data.length) {
+        _count = _count + widget.splitindex;
+        _scrollControler.jumpTo(1);
+        setState(() {});
+      }
+    } else if (position.pixels == 0) {
+      if (_count > widget.splitindex) {
+        _count = _count - widget.splitindex;
+        _scrollControler.jumpTo(position.maxScrollExtent - 1);
+        setState(() {});
+      }
     }
   }
 
@@ -52,11 +77,34 @@ class _MyTableState extends State<MyTable> {
   }
 
   void _sort() {
-    if (_isSort) {
-      widget.data.sort((a, b) => a[_columnIndex].compareTo(b[_columnIndex]));
-    } else {
-      widget.data.sort((a, b) => b[_columnIndex].compareTo(a[_columnIndex]));
+    if (widget.data.isEmpty) return;
+
+    int compare(dynamic a, dynamic b) {
+      if (a == null || b == null) return 0;
+
+      num? numA = num.tryParse(a.toString());
+      num? numB = num.tryParse(b.toString());
+
+      if (numA != null && numB != null) {
+        return numA.compareTo(numB);
+      }
+
+      DateTime? dateA = DateTime.tryParse(a.toString());
+      DateTime? dateB = DateTime.tryParse(b.toString());
+
+      if (dateA != null && dateB != null) {
+        return dateA.compareTo(dateB);
+      }
+
+      return a.toString().compareTo(b.toString());
     }
+
+    if (_isSort) {
+      widget.data.sort((a, b) => compare(a[_columnIndex], b[_columnIndex]));
+    } else {
+      widget.data.sort((a, b) => compare(b[_columnIndex], a[_columnIndex]));
+    }
+    print(_data);
 
     setState(() {});
   }
@@ -70,6 +118,8 @@ class _MyTableState extends State<MyTable> {
                       ? e.any((f) => f.contains(_query))
                       : e[_selectFilterIndex - 1].contains(_query)),
             )
+            .skip(_count > widget.splitindex ? _count : 0)
+            .take(widget.splitindex)
             .toList();
   }
 
@@ -112,6 +162,8 @@ class _MyTableState extends State<MyTable> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             PopupMenuButton(
+              position: PopupMenuPosition.under,
+              menuPadding: EdgeInsets.zero,
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Icon(
@@ -257,11 +309,15 @@ class _MyTableState extends State<MyTable> {
 
   Widget _tableRow() {
     return ListView.builder(
+      controller: _scrollControler,
       shrinkWrap: true,
       itemCount: _data.length,
       itemBuilder:
           (context, index) => InkWell(
-            onTap: widget.onTap == null ? null : () => widget.onTap!(index),
+            onTap:
+                widget.onTap == null
+                    ? null
+                    : () => widget.onTap!(int.parse(_data[index][0]) - 1),
             child: Table(
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               columnWidths: _columnWidths.map(
@@ -304,4 +360,73 @@ class _MyTableState extends State<MyTable> {
           ),
     );
   }
+}
+
+Future<void> exportToExcel({
+  required BuildContext context,
+  required List<List<String>> data,
+  required List<String>? header,
+}) async {
+  final excel = Excel.createExcel();
+  final sheet = excel['Sheet1'];
+
+  // Add header row
+  if (header != null) {
+    sheet.appendRow(header.map((e) => TextCellValue(e)).toList());
+  }
+
+  // Add data rows
+  for (var row in data) {
+    sheet.appendRow(row.map((cell) => TextCellValue(cell)).toList());
+  }
+
+  try {
+    final fileBytes = excel.save();
+    if (fileBytes == null) throw Exception('Failed to generate Excel file');
+
+    final String? outputDir = await getDownloadsDirectory();
+    if (outputDir == null) {
+      throw Exception('Could not get download directory');
+    }
+
+    final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
+    final filePath = '$outputDir/data_$timestamp.xlsx';
+    final file = File(filePath);
+    await file.writeAsBytes(fileBytes);
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Export successfully: $filePath')));
+
+    // 👉 Mở file ngay sau khi export thành công
+    await OpenFile.open(filePath);
+  } catch (e) {
+    if (!kIsWeb) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
+    }
+  }
+}
+
+Future<String?> getDownloadsDirectory() async {
+  if (kIsWeb) {
+    return null;
+  }
+  if (Platform.isAndroid) {
+    // Android: Use external storage directory
+    return "/storage/emulated/0/Download";
+  } else if (Platform.isIOS) {
+    // iOS: Use the application documents directory
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  } else if (Platform.isWindows) {
+    return "C:\\Users\\${Platform.environment['USERNAME']}\\Downloads";
+  } else if (Platform.isMacOS) {
+    return "~/Downloads";
+  } else if (Platform.isLinux) {
+    return "~/Downloads";
+  }
+
+  return null;
 }

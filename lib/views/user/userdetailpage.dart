@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workflow/models/user.dart';
-import 'package:workflow/widget/mainlayout.dart';
-import 'package:workflow/widget/myappbar.dart';
+import 'package:workflow/widget/mymainlayout/mainlayout.dart';
+import 'package:workflow/widget/mymainlayout/myappbar.dart';
 import 'package:workflow/widget/mybutton.dart';
 import 'package:workflow/widget/mydropdownbutton.dart';
 import 'package:workflow/widget/mytextfield.dart';

@@ -7,12 +7,11 @@ import 'package:workflow/views/user/userconfig.dart';
 import 'package:workflow/views/user/userdetailpage.dart';
 import 'package:workflow/views/user/userimportpage.dart';
 import 'package:workflow/widget/mybutton.dart';
-import 'package:workflow/widget/myappbar.dart';
+import 'package:workflow/widget/mymainlayout/myappbar.dart';
 import 'package:workflow/widget/mycontainer.dart';
-import 'package:workflow/widget/mydrawer.dart';
+import 'package:workflow/widget/mymainlayout/mydrawer.dart';
 import 'package:workflow/widget/mydropdownbutton.dart';
-import 'package:workflow/widget/myiconbutton.dart';
-import 'package:workflow/widget/mainlayout.dart';
+import 'package:workflow/widget/mymainlayout/mainlayout.dart';
 import 'package:workflow/widget/mytable.dart';
 import 'package:workflow/widget/mytextfield.dart';
 
@@ -28,7 +27,6 @@ class _UserManagerPageState extends State<UserManagerPage> {
   final _staffIdController = TextEditingController();
   final _userDivisionController = TextEditingController();
   final _userDepartmentController = TextEditingController();
-  final List<User> _users = [];
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +45,17 @@ class _UserManagerPageState extends State<UserManagerPage> {
       child: Consumer<UserProvider>(
         builder: (_, ref, child) {
           List<User> users = List.from(ref.users);
+          var list =
+              users.map((user) {
+                return [
+                  (users.indexOf(user) + 1).toString(),
+                  user.staffId ?? '',
+                  user.name ?? '',
+                  user.email ?? '',
+                  user.division ?? '',
+                  user.department ?? '',
+                ];
+              }).toList();
           if (users.isEmpty) {
             return Center();
           }
@@ -59,18 +68,10 @@ class _UserManagerPageState extends State<UserManagerPage> {
               'division',
               'department',
             ],
-            data:
-                users.map((user) {
-                  return [
-                    (users.indexOf(user) + 1).toString(),
-                    user.staffId ?? '',
-                    user.name ?? '',
-                    user.email ?? '',
-                    user.division ?? '',
-                    user.department ?? '',
-                  ];
-                }).toList(),
+            data: list,
+
             onTap: (index) {
+              print(index);
               Navigator.push(
                 context,
                 MaterialPageRoute(

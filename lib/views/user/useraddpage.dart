@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workflow/models/user.dart';
 import 'package:workflow/providers/user_provider.dart';
-import 'package:workflow/widget/mainlayout.dart';
+import 'package:workflow/widget/mymainlayout/mainlayout.dart';
 import 'package:workflow/widget/mybutton.dart';
 import 'package:workflow/widget/mydropdownbutton.dart';
-import 'package:workflow/widget/myappbar.dart';
+import 'package:workflow/widget/mymainlayout/myappbar.dart';
 import 'package:workflow/widget/mytextfield.dart';
 
 class UserAddPage extends StatefulWidget {

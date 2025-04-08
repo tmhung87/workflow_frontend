@@ -1,46 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:workflow/widget/mybutton.dart';
 import '../../providers/auth_provider.dart';
-import '../home/homepage.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
   final _staffIdController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String _message = '';
+  final String _message = '';
 
-  void _login(BuildContext context) async {
+  void _login(BuildContext context, String staffId, String password) async {
     if (_formKey.currentState!.validate()) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final response = await authProvider.login(
-        _staffIdController.text,
-        _passwordController.text,
-      );
+      await context.read<AuthProvider>().login(context, staffId, password);
+    }
+  }
 
-      setState(() {
-        if (response['token'] != null) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-        } else {
-          _message = response['message'] ?? 'Đăng nhập thất bại';
-        }
-      });
+  void _checklogin() async {
+    var storage = FlutterSecureStorage();
+    var staffId = await storage.read(key: 'staffId');
+    var password = await storage.read(key: 'password');
+    _staffIdController.text = staffId ?? '';
+    _passwordController.text = password ?? '';
+    if (staffId != null && password != null) {
+      await context.read<AuthProvider>().login(context, staffId, password);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    _staffIdController.text = 'VAE01231';
-    _passwordController.text = '123123';
+    _checklogin();
   }
 
   @override
@@ -91,7 +88,12 @@ class _LoginPageState extends State<LoginPage> {
 
                   // Nút Đăng nhập
                   MyButton(
-                    onPressed: () async => _login(context),
+                    onPressed:
+                        () async => _login(
+                          context,
+                          _staffIdController.text,
+                          _passwordController.text,
+                        ),
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),

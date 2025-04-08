@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:workflow/widget/myappbar.dart';
-import 'package:workflow/widget/mydrawer.dart';
+import 'package:workflow/widget/mymainlayout/myappbar.dart';
+import 'package:workflow/widget/mymainlayout/mydrawer.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

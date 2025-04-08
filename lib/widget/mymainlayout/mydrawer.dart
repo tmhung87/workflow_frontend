@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workflow/providers/auth_provider.dart';
-import 'package:workflow/styles/strings.dart';
 import 'package:workflow/views/home/homepage.dart';
 import 'package:workflow/views/settings/settingspage.dart';
 import 'package:workflow/views/task/taskmanagerpage.dart';
@@ -27,8 +26,8 @@ class _MyDrawerState extends State<MyDrawer> {
                     backgroundColor: Colors.white,
                     child: Icon(Icons.person),
                   ),
-                  accountName: Text(value.auth!.staffId!),
-                  accountEmail: Text(value.auth!.name!),
+                  accountName: Text(value.auth!.staffId),
+                  accountEmail: Text(value.auth!.name),
                 ),
           ),
           ListTile(

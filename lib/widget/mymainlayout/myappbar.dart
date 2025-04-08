@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workflow/providers/auth_provider.dart';
-import 'package:workflow/styles/strings.dart';
-import 'package:workflow/views/auth/loginpage.dart';
 import 'package:workflow/views/settings/settingspage.dart';
 import 'package:workflow/views/user/userdetailpage.dart';
 
@@ -66,13 +64,7 @@ class _MyAppBarState extends State<MyAppBar> {
                       PopupMenuItem(
                         child: Text('Logout'),
                         onTap:
-                            () => Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LoginPage(),
-                              ),
-                              (route) => false,
-                            ),
+                            () => context.read<AuthProvider>().logout(context),
                       ),
                     ],
               ),

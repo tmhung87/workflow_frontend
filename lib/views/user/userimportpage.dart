@@ -1,11 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workflow/models/user.dart';
 import 'package:workflow/providers/user_provider.dart';
 import 'package:workflow/utils/importexcel.dart';
-import 'package:workflow/widget/mainlayout.dart';
+import 'package:workflow/widget/mymainlayout/mainlayout.dart';
 import 'package:workflow/widget/mybutton.dart';
 import 'package:workflow/widget/myprogress.dart';
 import 'package:workflow/widget/mytable.dart';
@@ -29,7 +27,6 @@ class _UserImportPageState extends State<UserImportPage> {
             child: Text('Import'),
             onPressed: () async {
               list = await importExcel();
-              list.removeAt(0);
               setState(() {});
             },
           ),
@@ -40,12 +37,12 @@ class _UserImportPageState extends State<UserImportPage> {
               for (var i = 0; i < list.length; i++) {
                 users.add(
                   User(
-                    staffId: list[i][0],
-                    password: list[i][1],
-                    name: list[i][2],
-                    email: list[i][3],
-                    division: list[i][4],
-                    department: list[i][5],
+                    staffId: list[i][1],
+                    password: list[i][2],
+                    name: list[i][3],
+                    email: list[i][4],
+                    division: list[i][5],
+                    department: list[i][6],
                   ),
                 );
               }
@@ -76,8 +73,11 @@ class _UserImportPageState extends State<UserImportPage> {
           ),
         ],
         child: MyTable(
+          splitindex: 200,
+          columnWidths: {0: 50},
           data: list,
           header: [
+            'id',
             'staffId',
             'password',
             'name',

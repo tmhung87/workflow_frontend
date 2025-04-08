@@ -24,7 +24,6 @@ Future<List<List<String>>> importExcel() async {
   }
 
   if (fileBytes == null) {
-    print('filebytes');
     return [];
   }
 
@@ -47,7 +46,6 @@ Future<List<List<String>>> importExcel() async {
                     .toList(),
           )
           .toList();
-  print(allRows);
   allRows.removeAt(0);
   return allRows;
 }

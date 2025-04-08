@@ -1,6 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'dart:convert';
 
 import 'package:workflow/models/user.dart';
@@ -104,7 +105,7 @@ class UserApiService {
     }
   }
 
-  static Future<List<User>> findUser({
+  static Future<Response> findUser({
     String? staffId,
     String? name,
     String? division,
@@ -126,8 +127,6 @@ class UserApiService {
       }),
     );
 
-    List<dynamic> users = jsonDecode(response.body);
-    var usersList = users.map((e) => User.fromMap(e)).toList();
-    return usersList;
+    return response;
   }
 }

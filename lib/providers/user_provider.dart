@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:workflow/models/user.dart';
@@ -14,12 +16,20 @@ class UserProvider extends ChangeNotifier {
     String? division,
     String? department,
   }) async {
-    _users = await UserApiService.findUser(
+    var response = await UserApiService.findUser(
       staffId: staffId,
       name: name,
       division: division,
       department: department,
     );
+
+    var map = jsonDecode(response.body);
+    if (map['state'] == false) {
+      return;
+    }
+    final usersmap = map['users'] as List<dynamic>;
+    _users =
+        usersmap.map((e) => User.fromMap(e as Map<String, dynamic>)).toList();
     notifyListeners();
   }
 
