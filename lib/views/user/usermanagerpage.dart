@@ -71,7 +71,6 @@ class _UserManagerPageState extends State<UserManagerPage> {
             data: list,
 
             onTap: (index) {
-              print(index);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -79,7 +78,7 @@ class _UserManagerPageState extends State<UserManagerPage> {
                 ),
               );
             },
-            columnWidths: {0: 100},
+            columnWidths: {0: 50},
             alignments: {0: Alignment.center},
           );
         },

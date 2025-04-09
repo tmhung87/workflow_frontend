@@ -10,11 +10,11 @@ class MyTable extends StatefulWidget {
   const MyTable({
     super.key,
     required this.header,
-    this.columnWidths = const {},
+    this.columnWidths = const {0: 50},
     required this.data,
     this.onTap,
     this.alignments = const {},
-    this.splitindex = 30,
+    this.splitindex = 50,
   });
   final List<List<String>> data;
   final List<String> header;
@@ -55,13 +55,13 @@ class _MyTableState extends State<MyTable> {
     if (position.pixels == position.maxScrollExtent) {
       if (_count < widget.data.length) {
         _count = _count + widget.splitindex;
-        _scrollControler.jumpTo(1);
+        _scrollControler.jumpTo(position.maxScrollExtent / 2);
         setState(() {});
       }
     } else if (position.pixels == 0) {
       if (_count > widget.splitindex) {
         _count = _count - widget.splitindex;
-        _scrollControler.jumpTo(position.maxScrollExtent - 1);
+        _scrollControler.jumpTo(position.maxScrollExtent / 2);
         setState(() {});
       }
     }
@@ -69,7 +69,6 @@ class _MyTableState extends State<MyTable> {
 
   void _initTableWidth() {
     _totalWidth = 0;
-
     for (var i = 0; i < widget.header.length; i++) {
       _columnWidths[i] = (widget.columnWidths[i] ?? 100.0) + (_dx[i] ?? 0);
       _totalWidth = _totalWidth + _columnWidths[i]!;
@@ -104,8 +103,6 @@ class _MyTableState extends State<MyTable> {
     } else {
       widget.data.sort((a, b) => compare(b[_columnIndex], a[_columnIndex]));
     }
-    print(_data);
-
     setState(() {});
   }
 
@@ -114,12 +111,14 @@ class _MyTableState extends State<MyTable> {
         widget.data
             .where(
               (e) =>
-                  (_selectFilterIndex == 0
+                  (_selectFilterIndex == 1 && _query.isNotEmpty
+                      ? e[_selectFilterIndex - 1] == _query
+                      : _selectFilterIndex == 0
                       ? e.any((f) => f.contains(_query))
                       : e[_selectFilterIndex - 1].contains(_query)),
             )
-            .skip(_count > widget.splitindex ? _count : 0)
-            .take(widget.splitindex)
+            .skip(_count > widget.splitindex ? _count - widget.splitindex : 0)
+            .take(widget.splitindex * 2)
             .toList();
   }
 
@@ -154,72 +153,79 @@ class _MyTableState extends State<MyTable> {
   }
 
   Widget _top() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        height: 32,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            PopupMenuButton(
-              position: PopupMenuPosition.under,
-              menuPadding: EdgeInsets.zero,
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Icon(
-                  Icons.filter_list_outlined,
-                  color:
-                      _selectFilterIndex == 0
-                          ? Colors.grey
-                          : Theme.of(context).primaryColor,
-                ),
-              ),
-              itemBuilder: (context) {
-                return ['all', ...widget.header]
-                    .map(
-                      (e) => PopupMenuItem(
-                        child: Text(e),
-                        onTap: () {
-                          setState(() {
-                            _selectFilterIndex = [
-                              'all',
-                              ...widget.header,
-                            ].indexOf(e);
-                          });
-                        },
+    return LayoutBuilder(
+      builder:
+          (context, constraints) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 32,
+              width:
+                  constraints.maxWidth > _totalWidth
+                      ? _totalWidth
+                      : constraints.maxWidth,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  PopupMenuButton(
+                    position: PopupMenuPosition.under,
+                    menuPadding: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Icon(
+                        Icons.filter_list_outlined,
+                        color:
+                            _selectFilterIndex == 0
+                                ? Colors.grey
+                                : Theme.of(context).primaryColor,
                       ),
-                    )
-                    .toList();
-              },
-            ),
-            Expanded(
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _query = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  hintText: 'Search...',
-                  isDense: true,
-                  contentPadding: EdgeInsets.all(12),
-                  border: OutlineInputBorder(),
-                ),
+                    ),
+                    itemBuilder: (context) {
+                      return ['all', ...widget.header]
+                          .map(
+                            (e) => PopupMenuItem(
+                              child: Text(e),
+                              onTap: () {
+                                setState(() {
+                                  _selectFilterIndex = [
+                                    'all',
+                                    ...widget.header,
+                                  ].indexOf(e);
+                                });
+                              },
+                            ),
+                          )
+                          .toList();
+                    },
+                  ),
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        setState(() {
+                          _query = value;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Search...',
+                        isDense: true,
+                        contentPadding: EdgeInsets.all(12),
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  MyIconButton(
+                    child: Icon(Icons.print_outlined, color: Colors.grey),
+                    onPressed: () {
+                      exportToExcel(
+                        context: context,
+                        data: _data,
+                        header: widget.header,
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
-            MyIconButton(
-              child: Icon(Icons.print_outlined, color: Colors.grey),
-              onPressed: () {
-                exportToExcel(
-                  context: context,
-                  data: _data,
-                  header: widget.header,
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 

@@ -73,7 +73,6 @@ class _UserImportPageState extends State<UserImportPage> {
           ),
         ],
         child: MyTable(
-          splitindex: 200,
           columnWidths: {0: 50},
           data: list,
           header: [
