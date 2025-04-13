@@ -57,12 +57,9 @@ class _MainLayoutState extends State<MainLayout> {
                   width: double.infinity,
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: actions,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: actions,
                     ),
                   ),
                 ),
@@ -71,6 +68,7 @@ class _MainLayoutState extends State<MainLayout> {
             Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   widget.sideBar != null
                       ? _isSideBarOpen || !isMobile

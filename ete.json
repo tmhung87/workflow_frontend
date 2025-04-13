@@ -1,0 +1,35 @@
+{state: true, works: [
+        {id: 1, taskId: null, title: a, description: abc, point: null, estimatedHours: null, status: issued, assigned: , percent: 0, actualHours: 0, remark: , createdBy: VAE01231, createdAt: null, doneBy: null, doneAt: null, history: [
+                {point: null, title: a, doneAt: null, doneBy: null, remark: , status: , taskId: null, workId: null, percent: null, assigned: , createdAt: null, createdBy: VAE01231, actualHours: null, description: abc, estimatedHours: null
+                }
+            ]
+        },
+        {id: 111111, taskId: null, title: x, description: xxx, point: null, estimatedHours: null, status: issued, assigned: , percent: 0, actualHours: 0, remark: , createdBy: VAE01231, createdAt: null, doneBy: null, doneAt: null, history: [
+                {point: null, title: x, doneAt: null, doneBy: null, remark: , status: , taskId: null, workId: null, percent: null, assigned: , createdAt: null, createdBy: VAE01231, actualHours: null, description: xxx, estimatedHours: null
+                }
+            ]
+        },
+        {id: 111112, taskId: null, title: x1, description: xxx, point: null, estimatedHours: null, status: issued, assigned: , percent: 0, actualHours: 0, remark: , createdBy: VAE01231, createdAt: null, doneBy: null, doneAt: null, history: [
+                {point: null, title: x1, doneAt: null, doneBy: null, remark: , status: , taskId: null, workId: null, percent: null, assigned: , createdAt: null, createdBy: VAE01231, actualHours: null, description: xxx, estimatedHours: null
+                }
+            ]
+        },
+        {id: 111113, taskId: null, title: aaa, description: bbb, point: 10, estimatedHours: null, status: issued, assigned: VAE0129, percent: 0, actualHours: 0, remark: aaa, createdBy: VAE01231, createdAt: 2025-04-10T06: 21: 48.000Z, doneBy: null, doneAt: null, history: [
+                {id: null, point: 10, title: aaa, doneAt: null, doneBy: null, remark: aaa, status: , taskId: null, percent: null, assigned: VAE0129, createdAt: null, createdBy: VAE01231, actualHours: null, description: bbb, estimatedHours: null
+                }
+            ]
+        },
+        {id: 111114, taskId: null, title: a1, description: abc1, point: 8, estimatedHours: null, status: issued, assigned: VAE0126, percent: 0, actualHours: 0, remark: aaaa, createdBy: VAE01231, createdAt: 2025-04-10T06: 28: 21.000Z, doneBy: null, doneAt: null, history: [
+                {point: 8, title: a1, doneAt: null, doneBy: null, remark: aaaa, status: , taskId: null, percent: null, assigned: VAE0126, createdAt: null, createdBy: VAE01231, actualHours: null, description: abc1, estimatedHours: null
+                }
+            ]
+        },
+        {id: 111115, taskId: null, title: b1, description: aba, point: 6, estimatedHours: null, status: issued, assigned: vae123, percent: 0, actualHours: 0, remark: aaaa, createdBy: VAE01231, createdAt: 2025-04-10T06: 54: 24.000Z, doneBy: null, doneAt: 2025-04-10T06: 54: 24.000Z, history: null
+        },
+        {id: 111116, taskId: null, title: a1, description: abc1, point: 4, estimatedHours: null, status: issued, assigned: VAE0130, percent: 0, actualHours: 0, remark: ccc, createdBy: VAE01231, createdAt: 2025-04-10T08: 45: 03.000Z, doneBy: null, doneAt: null, history: [
+                {point: 4, title: a1, doneAt: null, doneBy: null, remark: ccc, status: , taskId: null, percent: null, assigned: VAE0130, editedBy: VAE01231, createdAt: null, createdBy: VAE01231, editedTime: 2025-04-10T15: 45: 03.704278, actualHours: null, description: abc1, estimatedHours: null
+                }
+            ]
+        }
+    ]
+}

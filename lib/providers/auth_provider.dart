@@ -27,7 +27,7 @@ class AuthProvider with ChangeNotifier {
       await _storage.write(key: 'token', value: map['token']);
       await _storage.write(key: 'name', value: staffId.toUpperCase());
       await _storage.write(key: 'password', value: password);
-      _auth = User.fromMap(map['user']);
+      _auth = User.fromJson(map['user']);
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),

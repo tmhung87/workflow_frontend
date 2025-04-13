@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:workflow/providers/loading_provider.dart';
 import 'package:workflow/widget/showdialog.dart';
 
 class MyButton extends StatefulWidget {
   const MyButton({super.key, required this.child, required this.onPressed});
   final Widget child;
-
   final Future Function() onPressed;
 
   @override
@@ -12,7 +13,6 @@ class MyButton extends StatefulWidget {
 }
 
 class _MyButtonState extends State<MyButton> {
-  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,40 +22,16 @@ class _MyButtonState extends State<MyButton> {
           padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 8)),
         ),
         onPressed: () async {
-          setState(() => isLoading = true);
+          context.read<LoadingProvider>().startLoading();
           try {
-            var res = await widget.onPressed();
-            // if (!res['state']) {
-            //   throw res['message'] ?? 'Unknown error';
-            // }
-            // showMyDialog(context: context, title: 'Success', content: '');
+            await widget.onPressed();
           } catch (e) {
-            showMyDialog(
-              isSuccess: false,
-              context: context,
-              title: 'Error',
-              content: '$e',
-            );
+            print(e);
           } finally {
-            setState(() => isLoading = false);
+            context.read<LoadingProvider>().endLoading();
           }
         },
-        child: SizedBox(
-          height: 36,
-          child: Center(
-            child:
-                isLoading
-                    ? FittedBox(
-                      fit: BoxFit.contain,
-                      child: SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(color: Colors.white),
-                      ),
-                    )
-                    : widget.child,
-          ),
-        ),
+        child: Padding(padding: const EdgeInsets.all(8.0), child: widget.child),
       ),
     );
   }

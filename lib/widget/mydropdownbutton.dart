@@ -10,10 +10,12 @@ class MyDropdownButton extends StatefulWidget {
     required this.label,
     required this.items,
     this.controller,
+    this.isValidator = false,
   });
   final String label;
   final List<String> items;
   final TextEditingController? controller;
+  final bool isValidator;
 
   @override
   State<MyDropdownButton> createState() => _MyDropdownButtonState();
@@ -33,6 +35,7 @@ class _MyDropdownButtonState extends State<MyDropdownButton> {
             menuHeight: 250,
             width: constraints.maxWidth + 24,
             label: Text(widget.label),
+
             inputDecorationTheme: InputDecorationTheme(
               floatingLabelBehavior: FloatingLabelBehavior.always,
               isDense: true,
@@ -40,6 +43,7 @@ class _MyDropdownButtonState extends State<MyDropdownButton> {
               border: OutlineInputBorder(),
             ),
             controller: widget.controller,
+
             dropdownMenuEntries:
                 widget.items.map((String item) {
                   return DropdownMenuEntry<String>(value: item, label: item);
@@ -126,6 +130,7 @@ class DropdownMenu<T> extends StatefulWidget {
     required this.dropdownMenuEntries,
     this.inputFormatters,
     this.closeBehavior = DropdownMenuCloseBehavior.all,
+    this.isValidator = false,
   }) : assert(filterCallback == null || enableFilter);
 
   final bool enabled;
@@ -185,6 +190,8 @@ class DropdownMenu<T> extends StatefulWidget {
   final Offset? alignmentOffset;
 
   final DropdownMenuCloseBehavior closeBehavior;
+
+  final bool isValidator;
 
   @override
   State<DropdownMenu<T>> createState() => _DropdownMenuState<T>();
@@ -745,16 +752,19 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
           style: effectiveTextStyle,
           controller: _localTextEditingController,
           onEditingComplete: _handleEditingComplete,
-          validator: (value) {
-            if (value == null ||
-                value.isEmpty ||
-                !widget.dropdownMenuEntries
-                    .map((e) => e.label)
-                    .contains(value)) {
-              return "Please select a valid option";
-            }
-            return null;
-          },
+          validator:
+              widget.isValidator == false
+                  ? null
+                  : (value) {
+                    if (value == null ||
+                        value.isEmpty ||
+                        !widget.dropdownMenuEntries
+                            .map((e) => e.label)
+                            .contains(value)) {
+                      return "Please select a valid option";
+                    }
+                    return null;
+                  },
           onTap:
               !widget.enabled
                   ? null

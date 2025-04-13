@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:workflow/providers/auth_provider.dart';
+import 'package:workflow/providers/loading_provider.dart';
+import 'package:workflow/providers/task_provider.dart';
 import 'package:workflow/providers/user_provider.dart';
+import 'package:workflow/providers/work_provider.dart';
 import 'package:workflow/styles/colors.dart';
-import 'package:workflow/styles/strings.dart';
-import 'package:workflow/views/home/homepage.dart';
 import 'package:workflow/views/auth/loginpage.dart';
-import 'package:workflow/views/task/taskmanagerpage.dart';
-import 'package:workflow/views/user/useraddpage.dart';
-import 'package:workflow/views/user/userdetailpage.dart';
-import 'package:workflow/views/user/usermanagerpage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Đảm bảo Flutter được khởi tạo trước
@@ -19,8 +16,12 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => LoadingProvider()),
+
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => TaskProvider()),
+        ChangeNotifierProvider(create: (context) => WorkProvider()),
       ],
       child: const MyApp(),
     ),

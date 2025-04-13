@@ -19,17 +19,17 @@ class _UserDetailPageState extends State<UserDetailPage> {
   final _divisionController = TextEditingController();
   final _deparmentController = TextEditingController();
 
-  final _createAtController = TextEditingController();
+  // final _createAtController = TextEditingController();
 
-  final _updateAtController = TextEditingController();
+  // final _updateAtController = TextEditingController();
 
   void _initUser() {
     _staffIdController.text = widget.user.staffId;
     _nameController.text = widget.user.name;
     _divisionController.text = widget.user.division;
     _deparmentController.text = widget.user.department;
-    _createAtController.text = widget.user.createdAt!;
-    _updateAtController.text = widget.user.updatedAt!;
+    // _createAtController.text = widget.user.createdAt;
+    // _updateAtController.text = widget.user.updatedAt;
   }
 
   @override
@@ -44,38 +44,43 @@ class _UserDetailPageState extends State<UserDetailPage> {
       appBar: MyAppBar(label: 'Detail user'),
       body: MainLayout(
         actions: [MyButton(onPressed: () async {}, child: Text('Update'))],
-        child: Center(
-          child: SizedBox(
-            width: 500,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                MyTextField(label: 'Staff Id', controller: _staffIdController),
-                MyTextField(label: 'Name', controller: _nameController),
+        child: SingleChildScrollView(
+          child: Center(
+            child: SizedBox(
+              width: 500,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  MyTextField(
+                    label: 'Staff Id',
+                    controller: _staffIdController,
+                  ),
+                  MyTextField(label: 'Name', controller: _nameController),
 
-                MyDropdownButton(
-                  label: 'Division',
-                  items: [],
-                  controller: _divisionController,
-                ),
-                MyDropdownButton(
-                  label: 'Deparment',
-                  items: [],
-                  controller: _deparmentController,
-                ),
+                  MyDropdownButton(
+                    label: 'Division',
+                    items: [],
+                    controller: _divisionController,
+                  ),
+                  MyDropdownButton(
+                    label: 'Deparment',
+                    items: [],
+                    controller: _deparmentController,
+                  ),
 
-                MyTextField(
-                  enable: false,
-                  label: 'Create add',
-                  controller: _createAtController,
-                ),
-                MyTextField(
-                  enable: false,
-                  label: 'Update add',
-                  controller: _updateAtController,
-                ),
-              ],
+                  // MyTextField(
+                  //   enable: false,
+                  //   label: 'Create add',
+                  //   controller: _createAtController,
+                  // ),
+                  // MyTextField(
+                  //   enable: false,
+                  //   label: 'Update add',
+                  //   controller: _updateAtController,
+                  // ),
+                ],
+              ),
             ),
           ),
         ),

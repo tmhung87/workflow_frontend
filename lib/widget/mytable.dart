@@ -15,6 +15,7 @@ class MyTable extends StatefulWidget {
     this.onTap,
     this.alignments = const {},
     this.splitindex = 50,
+    this.isScroll = true,
   });
   final List<List<String>> data;
   final List<String> header;
@@ -22,6 +23,7 @@ class MyTable extends StatefulWidget {
   final Function(int index)? onTap;
   final Map<int, AlignmentGeometry> alignments;
   final int splitindex;
+  final bool isScroll;
   @override
   State<MyTable> createState() => _MyTableState();
 }
@@ -126,28 +128,33 @@ class _MyTableState extends State<MyTable> {
   Widget build(BuildContext context) {
     _initTableWidth();
     _filter();
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Column(
-        children: [
-          _top(),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Material(
-                child: SizedBox(
-                  width: _totalWidth,
-                  child: Column(
-                    children: [_header(), Expanded(child: _tableRow())],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _top(),
+            Flexible(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Material(
+                  child: SizedBox(
+                    width: _totalWidth,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [_header(), Flexible(child: _tableRow())],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -167,6 +174,7 @@ class _MyTableState extends State<MyTable> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   PopupMenuButton(
+                    tooltip: "Filter",
                     position: PopupMenuPosition.under,
                     menuPadding: EdgeInsets.zero,
                     child: Padding(
@@ -336,21 +344,29 @@ class _MyTableState extends State<MyTable> {
                       _data[index]
                           .map(
                             (e) => TableCell(
-                              child: SizedBox(
-                                height: 36,
-                                child: SizedBox.expand(
-                                  child: Container(
-                                    alignment:
-                                        widget.alignments[_data[index].indexOf(
+                              child: Tooltip(
+                                textStyle: TextStyle(color: Colors.black),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                message: e,
+                                child: SizedBox(
+                                  height: 36,
+                                  child: SizedBox.expand(
+                                    child: Container(
+                                      alignment:
+                                          widget.alignments[_data[index]
+                                              .indexOf(e)] ??
+                                          Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
                                           e,
-                                        )] ??
-                                        Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: Text(
-                                        e,
-                                        style: TextStyle(
-                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                       ),
                                     ),

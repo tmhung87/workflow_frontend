@@ -29,7 +29,7 @@ class UserProvider extends ChangeNotifier {
     }
     final usersmap = map['users'] as List<dynamic>;
     _users =
-        usersmap.map((e) => User.fromMap(e as Map<String, dynamic>)).toList();
+        usersmap.map((e) => User.fromJson(e as Map<String, dynamic>)).toList();
     notifyListeners();
   }
 
@@ -50,5 +50,10 @@ class UserProvider extends ChangeNotifier {
   void setSelectedUser(User user) {
     _selectedUser = user;
     notifyListeners();
+  }
+
+  void clear() {
+    _users = [];
+    _selectedUser = null;
   }
 }

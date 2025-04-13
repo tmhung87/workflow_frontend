@@ -95,7 +95,7 @@ class UserApiService {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: jsonEncode(user.toMap()),
+        body: jsonEncode(user.toJson()),
       );
       var res = jsonDecode(response.body);
 

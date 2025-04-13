@@ -15,14 +15,14 @@ import 'package:workflow/widget/mymainlayout/mainlayout.dart';
 import 'package:workflow/widget/mytable.dart';
 import 'package:workflow/widget/mytextfield.dart';
 
-class UserManagerPage extends StatefulWidget {
-  const UserManagerPage({super.key, this.isSelect = false});
+class EvaluatePage extends StatefulWidget {
+  const EvaluatePage({super.key, this.isSelect = false});
   final bool isSelect;
   @override
-  State<UserManagerPage> createState() => _UserManagerPageState();
+  State<EvaluatePage> createState() => _EvaluatePageState();
 }
 
-class _UserManagerPageState extends State<UserManagerPage> {
+class _EvaluatePageState extends State<EvaluatePage> {
   final _userNameController = TextEditingController();
   final _staffIdController = TextEditingController();
   final _userDivisionController = TextEditingController();
@@ -96,22 +96,8 @@ class _UserManagerPageState extends State<UserManagerPage> {
 
   List<Widget> get _actions {
     return [
-      MyButton(
-        child: Text('Add A New User'),
-        onPressed:
-            () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => UserAddPage()),
-            ),
-      ),
-      MyButton(
-        child: Text('User config'),
-        onPressed:
-            () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => UserConfigPage()),
-            ),
-      ),
+      MyButton(child: Text('Daily'), onPressed: () async {}),
+      MyButton(child: Text('Monthly'), onPressed: () async {}),
 
       MyButton(
         child: Text('Import users'),

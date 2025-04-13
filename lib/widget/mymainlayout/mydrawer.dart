@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workflow/providers/auth_provider.dart';
+import 'package:workflow/views/evaluation/evaluatepage.dart';
 import 'package:workflow/views/home/homepage.dart';
 import 'package:workflow/views/settings/settingspage.dart';
 import 'package:workflow/views/task/taskmanagerpage.dart';
 import 'package:workflow/views/user/usermanagerpage.dart';
+import 'package:workflow/views/work/workmanagerpage.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -57,6 +59,26 @@ class _MyDrawerState extends State<MyDrawer> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => TaskManagerPage()),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('Work Manager'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => WorkManagerPage()),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('Evaluate manager'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => EvaluatePage()),
               );
             },
           ),
