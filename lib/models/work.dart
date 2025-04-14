@@ -72,7 +72,7 @@ class Work {
                 title: json['title'] ?? '',
                 description: json['description'] ?? '',
                 point: json['point'] ?? 0,
-                estimatedHours: json['estimatedHours'] ?? 0,
+                estimatedHours: (json['estimatedHours'] ?? 0 as num).toDouble(),
               )
               : null,
       status: json['status'],
