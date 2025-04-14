@@ -187,14 +187,13 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
                   task: updatedTask,
                   status: _statusController.text,
                   assigned: _assignedController.text,
-                  percent: int.tryParse(_percentController.text) ?? 0,
+                  percent: double.tryParse(_percentController.text) ?? 0,
                   actualHours: double.tryParse(_actualHoursController.text),
                   remark: _remarkController.text,
                   createdBy: _work.createdBy,
                   createdAt: _work.createdAt,
                   doneBy: _work.doneBy,
                   doneAt: _work.doneAt,
-                  history: _work.history,
                 );
 
                 final response = await WorkApiService.updateWork(updatedWork);

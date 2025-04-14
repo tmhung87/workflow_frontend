@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workflow/models/user.dart';
 import 'package:workflow/providers/user_provider.dart';
+import 'package:workflow/service/evaluate_api.dart';
+import 'package:workflow/utils/textupper.dart';
 import 'package:workflow/views/user/useraddpage.dart';
 import 'package:workflow/views/user/userconfig.dart';
 import 'package:workflow/views/user/userdetailpage.dart';
@@ -27,7 +29,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
   final _staffIdController = TextEditingController();
   final _userDivisionController = TextEditingController();
   final _userDepartmentController = TextEditingController();
-  List<User> _users = [];
+  List<Map<String, dynamic>> list = [];
 
   @override
   Widget build(BuildContext context) {
@@ -46,67 +48,76 @@ class _EvaluatePageState extends State<EvaluatePage> {
   }
 
   MyContainer get _child {
+    List<String> header = [];
+    List<List<String>> data = [];
+    if (list.isNotEmpty) {
+      header = [
+        "Id",
+        ...list[0].keys.toList().map((e) => formatCamelCase(e)).toList(),
+      ];
+      data =
+          list
+              .map(
+                (e) => [
+                  (list.indexOf(e) + 1).toString(),
+                  ...e.values
+                      .toList()
+                      .map((f) => (f ?? '').toString())
+                      .toList(),
+                ],
+              )
+              .toList();
+    }
+
     return MyContainer(
       title: 'User list',
-      child: Consumer<UserProvider>(
-        builder: (_, ref, child) {
-          List<User> users = List.from(ref.users);
-          var list =
-              users.map((user) {
-                return [
-                  (users.indexOf(user) + 1).toString(),
-                  user.staffId ?? '',
-                  user.name ?? '',
-                  user.email ?? '',
-                  user.division ?? '',
-                  user.department ?? '',
-                ];
-              }).toList();
-          if (users.isEmpty) {
-            return Center();
-          }
-          return MyTable(
-            header: [
-              'id',
-              'staffid',
-              'name',
-              'email',
-              'division',
-              'department',
-            ],
-            data: list,
+      child:
+          list.isNotEmpty
+              ? MyTable(
+                header: header,
+                data: data,
 
-            onTap: (index) {
-              widget.isSelect == true
-                  ? Navigator.pop(context, users[index])
-                  : Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => UserDetailPage(user: users[index]),
-                    ),
+                onTap: (index) async {
+                  final res = await EvaluateApiService.fetchReport(
+                    type: data[index][1],
                   );
-            },
-            columnWidths: {0: 50},
-            alignments: {0: Alignment.center},
-          );
-        },
-      ),
+                  list = List.from(res);
+                  setState(() {});
+                },
+                columnWidths: {0: 50, 1: 120},
+                alignments: {0: Alignment.center},
+              )
+              : Center(child: Text('No data')),
     );
   }
 
   List<Widget> get _actions {
     return [
-      MyButton(child: Text('Daily'), onPressed: () async {}),
-      MyButton(child: Text('Monthly'), onPressed: () async {}),
-
       MyButton(
-        child: Text('Import users'),
-        onPressed:
-            () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => UserImportPage()),
-            ),
+        child: Text('Daily'),
+        onPressed: () async {
+          final res = await EvaluateApiService.fetchReport(type: 'daily');
+          list = List.from(res);
+          setState(() {});
+        },
       ),
+      MyButton(
+        child: Text('Monthly'),
+        onPressed: () async {
+          final res = await EvaluateApiService.fetchReport(type: 'monthly');
+          list = List.from(res);
+          setState(() {});
+        },
+      ),
+
+      // MyButton(
+      //   child: Text('Staff'),
+      //   onPressed: () async {
+      //     final res = await EvaluateApiService.fetchReport(type: 'daily');
+      //     list = List.from(res);
+      //     setState(() {});
+      //   },
+      // ),
     ];
   }
 

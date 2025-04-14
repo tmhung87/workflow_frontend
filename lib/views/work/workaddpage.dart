@@ -78,20 +78,12 @@ class _WorkAddPageState extends State<WorkAddPage> {
                       task: _task,
                       status: _statusController.text,
                       assigned: _assignedController.text,
-                      percent: int.tryParse(_percentController.text),
+                      percent: double.tryParse(_percentController.text),
                       actualHours: double.tryParse(_workHourController.text),
                       remark: _remarkController.text,
                       createdBy: context.read<AuthProvider>().auth!.staffId,
-                      history: [],
                     );
-                    final data = work.toJson();
-                    data.remove('history');
-                    data.remove('id');
-                    data['editedTime'] =
-                        DateTime.now().toUtc().toIso8601String();
-                    data['editedBy'] =
-                        context.read<AuthProvider>().auth!.staffId;
-                    work.history.add(data);
+                   
                     final response = await WorkApiService.createWork(work);
                     print(response);
                     if (response['state'] == false) {

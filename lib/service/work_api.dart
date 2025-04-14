@@ -102,6 +102,7 @@ class WorkApiService {
     if (map['state'] != true) return [];
 
     final worksList = map['works'] as List<dynamic>;
+    print(worksList);
     return worksList.map((e) => Work.fromJson(e)).toList();
   }
 

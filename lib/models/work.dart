@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:workflow/models/task.dart';
 import 'package:workflow/utils/tomysqldate.dart';
 
@@ -7,14 +6,13 @@ class Work {
   final Task? task;
   final String? status;
   final String? assigned;
-  final int? percent;
+  final double? percent;
   final double? actualHours;
   final String? remark;
   final String? createdBy;
   final DateTime? createdAt;
   final String? doneBy;
   final DateTime? doneAt;
-  final List<Map<String, dynamic>> history;
 
   Work({
     this.workId,
@@ -28,7 +26,6 @@ class Work {
     this.createdAt,
     this.doneBy,
     this.doneAt,
-    required this.history,
   });
 
   Work copyWith({
@@ -36,7 +33,7 @@ class Work {
     Task? task,
     String? status,
     String? assigned,
-    int? percent,
+    double? percent,
     double? actualHours,
     String? remark,
     String? createdBy,
@@ -57,7 +54,6 @@ class Work {
       createdAt: createdAt ?? this.createdAt,
       doneBy: doneBy ?? this.doneBy,
       doneAt: doneAt ?? this.doneAt,
-      history: history ?? this.history,
     );
     return work;
   }
@@ -81,11 +77,12 @@ class Work {
               : null,
       status: json['status'],
       assigned: json['assigned'],
-      percent: json['percent'],
+      percent:
+          json['percent'] != null ? (json['percent'] as num).toDouble() : 0.0,
       actualHours:
           json['actualHours'] != null
               ? (json['actualHours'] as num).toDouble()
-              : null,
+              : 0.0,
       remark: json['remark'],
       createdBy: json['createdBy'],
       createdAt:
@@ -94,10 +91,6 @@ class Work {
               : null,
       doneBy: json['doneBy'],
       doneAt: json['doneAt'] != null ? DateTime.tryParse(json['doneAt']) : null,
-      history:
-          (json['history'] as List?)!
-              .map((e) => Map<String, dynamic>.from(e))
-              .toList(),
     );
   }
 
@@ -114,7 +107,6 @@ class Work {
       'createdAt': toMySQLDate(createdAt),
       'doneBy': doneBy,
       'doneAt': toMySQLDate(doneAt),
-      'history': history,
     };
   }
 }
