@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-class MyDropdownButton extends StatefulWidget {
-  const MyDropdownButton({
+class MyDropdown extends StatefulWidget {
+  const MyDropdown({
     super.key,
     required this.label,
     required this.items,
@@ -18,10 +18,10 @@ class MyDropdownButton extends StatefulWidget {
   final bool isValidator;
 
   @override
-  State<MyDropdownButton> createState() => _MyDropdownButtonState();
+  State<MyDropdown> createState() => _MyDropdownState();
 }
 
-class _MyDropdownButtonState extends State<MyDropdownButton> {
+class _MyDropdownState extends State<MyDropdown> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -723,6 +723,12 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
         final Widget trailingButton = Padding(
           padding: isCollapsed ? EdgeInsets.zero : const EdgeInsets.all(4.0),
           child: InkWell(
+            onLongPress:
+                !widget.enabled
+                    ? null
+                    : () {
+                      widget.controller!.clear();
+                    },
             onTap:
                 !widget.enabled
                     ? null

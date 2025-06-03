@@ -8,10 +8,11 @@ import 'package:workflow/providers/auth_provider.dart';
 import 'package:workflow/providers/work_provider.dart';
 import 'package:workflow/service/hour_api.dart';
 import 'package:workflow/service/work_api.dart';
+import 'package:workflow/utils/tomysqldate.dart';
 import 'package:workflow/views/user/usermanagerpage.dart';
 import 'package:workflow/widget/mybutton.dart';
 import 'package:workflow/widget/mycontainer.dart';
-import 'package:workflow/widget/mydropdownbutton.dart';
+import 'package:workflow/widget/mydropdown.dart';
 import 'package:workflow/widget/myloadingwidget.dart';
 import 'package:workflow/widget/mymainlayout/mainlayout.dart';
 import 'package:workflow/widget/mymainlayout/myappbar.dart';
@@ -74,7 +75,7 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
       });
       _actualHoursController.text = totalHours.toString();
       _percentController.text =
-          (totalHours * 100 / (_work.task?.estimatedHours ?? 0.1)).toString();
+          (totalHours * 100 / (_work.task.estimatedHours)).toString();
       setState(() {});
     }
   }
@@ -101,7 +102,7 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
       });
       _actualHoursController.text = totalHours.toString();
       _percentController.text =
-          (totalHours * 100 / (_work.task?.estimatedHours ?? 0.1)).toString();
+          (totalHours * 100 / (_work.task.estimatedHours)).toString();
       setState(() {});
     }
   }
@@ -110,15 +111,15 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
     if (widget.work != null) {
       _work = widget.work!;
       _workIdController.text = _work.workId.toString();
-      _titleController.text = _work.task?.title ?? '';
-      _percentController.text = _work.percent?.toString() ?? '';
-      _actualHoursController.text = _work.actualHours?.toString() ?? '';
-      _remarkController.text = _work.remark ?? '';
-      _statusController.text = _work.status ?? '';
-      _descriptionController.text = _work.task?.description ?? '';
-      _pointController.text = _work.task?.point.toString() ?? '0';
-      _estHoursController.text = _work.task?.estimatedHours.toString() ?? '0.0';
-      _assignedController.text = _work.assigned ?? '';
+      _titleController.text = _work.task.title;
+      _percentController.text = _work.percent.toString();
+      _actualHoursController.text = _work.actualHours.toString();
+      _remarkController.text = _work.remark;
+      _statusController.text = _work.status;
+      _descriptionController.text = _work.task.description;
+      _pointController.text = _work.task.point.toString();
+      _estHoursController.text = _work.task.estimatedHours.toString();
+      _assignedController.text = _work.assigned;
       _initHours();
     }
   }
@@ -152,12 +153,12 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
         body: MainLayout(
           actions: [
             SizedBox(
-              width: 220,
+              width: 200,
               child: MyTextField(
                 controller: _workIdController,
                 prefixIcon: const Text('WORK ID: '),
-                suffixIcon: MyButton(
-                  onPressed: () async {
+                suffixIcon: InkWell(
+                  onTap: () async {
                     final work = await WorkApiService.findWorkById(
                       _workIdController.text.trim(),
                     );
@@ -172,69 +173,150 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
                 ),
               ),
             ),
-            MyButton(
-              onPressed: () async {
-                final updatedTask = _work.task!.copyWith(
-                  title: _titleController.text,
-                  description: _descriptionController.text,
-                  point: int.tryParse(_pointController.text) ?? 0,
-                  estimatedHours:
-                      double.tryParse(_estHoursController.text) ?? 0.0,
-                );
-
-                final updatedWork = Work(
-                  workId: _work.workId,
-                  task: updatedTask,
-                  status: _statusController.text,
-                  assigned: _assignedController.text,
-                  percent: double.tryParse(_percentController.text) ?? 0,
-                  actualHours: double.tryParse(_actualHoursController.text),
-                  remark: _remarkController.text,
-                  createdBy: _work.createdBy,
-                  createdAt: _work.createdAt,
-                  doneBy: _work.doneBy,
-                  doneAt: _work.doneAt,
-                );
-
-                final response = await WorkApiService.updateWork(updatedWork);
-                if (response['state'] == false) {
-                  showMyDialog(
-                    isSuccess: false,
-                    context: context,
-                    title: 'Error',
-                    content: response['error'],
-                  );
-                } else {
-                  showMyDialog(
-                    context: context,
-                    title: 'Success',
-                    content: response['message'],
-                  );
-                }
-              },
-              child: const Text('Update'),
-            ),
-            MyButton(
-              onPressed: () async {
-                final response = await WorkApiService.deleteWork(_work.workId!);
-                if (response['state'] == false) {
-                  showMyDialog(
-                    isSuccess: false,
-                    context: context,
-                    title: 'Error',
-                    content: response['error'],
-                  );
-                } else {
-                  showMyDialog(
-                    context: context,
-                    title: 'Success',
-                    content: response['message'],
-                  );
-                }
-              },
-              child: const Text('Delete'),
-            ),
           ],
+          sideBar: ListView(
+            children: [
+              MyButton(
+                ask: true,
+
+                onPressed: () async {
+                  final updatedTask = _work.task.copyWith(
+                    title: _titleController.text,
+                    description: _descriptionController.text,
+                    point: int.tryParse(_pointController.text) ?? 0,
+                    estimatedHours:
+                        double.tryParse(_estHoursController.text) ?? 0.0,
+                  );
+
+                  final updatedWork = Work(
+                    workId: _work.workId,
+                    task: updatedTask,
+                    status: _statusController.text,
+                    assigned: _assignedController.text,
+                    percent: double.tryParse(_percentController.text) ?? 0,
+                    actualHours: double.tryParse(_actualHoursController.text),
+                    remark: _remarkController.text,
+                    createdBy: _work.createdBy,
+                    createdAt: _work.createdAt,
+                    doneBy: _work.doneBy,
+                    doneAt: _work.doneAt,
+                  );
+
+                  final response = await WorkApiService.updateWork(updatedWork);
+                  if (response['state'] == false) {
+                    showMyDialog(
+                      isSuccess: false,
+                      context: context,
+                      title: 'Error',
+                      content: response['error'],
+                    );
+                  } else {
+                    showMyDialog(
+                      context: context,
+                      title: 'Success',
+                      content: response['message'],
+                    );
+                  }
+                },
+                child: const Text('Update'),
+              ),
+              MyButton(
+                ask: true,
+                onPressed: () async {
+                  final response = await WorkApiService.deleteWork(
+                    _work.workId!,
+                  );
+                  if (response['state'] == false) {
+                    showMyDialog(
+                      isSuccess: false,
+                      context: context,
+                      title: 'Error',
+                      content: response['error'],
+                    );
+                  } else {
+                    showMyDialog(
+                      context: context,
+                      title: 'Success',
+                      content: response['message'],
+                    );
+                  }
+                },
+                child: const Text('Delete'),
+              ),
+              MyButton(
+                child: Container(child: Text('Record hours')),
+                onPressed: () async {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text("Input work hour"),
+                        content: SizedBox(
+                          width: 500,
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: [
+                              MyTextField(
+                                hintText:
+                                    context.read<AuthProvider>().auth!.staffId,
+                                isValidator: false,
+                                label: 'Staff id',
+                                controller: _staffIdController,
+                                suffixIcon: InkWell(
+                                  child: Icon(Icons.select_all),
+                                  onDoubleTap: () {
+                                    _titleController.clear();
+                                  },
+                                  onTap: () async {
+                                    User? user = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) =>
+                                                UserManagerPage(isSelect: true),
+                                      ),
+                                    );
+                                    if (user != null) {
+                                      _staffIdController.text = user.staffId;
+                                    }
+                                  },
+                                ),
+                              ),
+                              MyTextField(
+                                keyboardType: TextInputType.number,
+                                label: "Work hours",
+                                controller: _workHoursController,
+                              ),
+                              MyTextField(
+                                label: "Work time",
+                                controller: _workTimeController,
+                                isDate: true,
+                              ),
+                            ],
+                          ),
+                        ),
+                        actions: [
+                          MyButton(
+                            child: Text('YES'),
+                            onPressed: () async {
+                              _createHours();
+                              Navigator.pop(context);
+                            },
+                          ),
+                          MyButton(
+                            child: Text('NO'),
+                            onPressed: () async {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
           child: SingleChildScrollView(
             child: Center(
               child: SizedBox(
@@ -243,9 +325,20 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
                   children: [
                     MyContainer(
                       title:
-                          'Work was created by ${_work.createdBy} at ${_work.createdAt}',
+                          'Work was created by ${_work.createdBy} at ${toMySQLDate(_work.createdAt)}',
                       child: Column(
                         children: [
+                          MyDropdown(
+                            label: 'Status',
+                            controller: _statusController,
+                            items: const [
+                              'issued',
+                              'pending',
+                              'inprogress',
+                              'done',
+                              'cancelled',
+                            ],
+                          ),
                           MyTextField(
                             label: 'Title',
                             controller: _titleController,
@@ -302,102 +395,12 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
                             label: 'Remark',
                             controller: _remarkController,
                           ),
-                          MyDropdownButton(
-                            label: 'Status',
-                            controller: _statusController,
-                            items: const [
-                              'issued',
-                              'pending',
-                              'inprogress',
-                              'done',
-                              'cancelled',
-                            ],
-                          ),
                         ],
                       ),
                     ),
                     MyContainer(
-                      title: 'Work hour infomation',
-                      actions: [
-                        InkWell(
-                          child: Container(child: Icon(Icons.add, size: 20)),
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text("Input work hour"),
-                                  content: SizedBox(
-                                    width: 500,
-                                    child: ListView(
-                                      shrinkWrap: true,
-                                      children: [
-                                        MyTextField(
-                                          hintText:
-                                              context
-                                                  .read<AuthProvider>()
-                                                  .auth!
-                                                  .staffId,
-                                          isValidator: false,
-                                          label: 'Staff id',
-                                          controller: _staffIdController,
-                                          suffixIcon: InkWell(
-                                            child: Icon(Icons.select_all),
-                                            onDoubleTap: () {
-                                              _titleController.clear();
-                                            },
-                                            onTap: () async {
-                                              User? user = await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder:
-                                                      (context) =>
-                                                          UserManagerPage(
-                                                            isSelect: true,
-                                                          ),
-                                                ),
-                                              );
-                                              if (user != null) {
-                                                _staffIdController.text =
-                                                    user.staffId;
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                        MyTextField(
-                                          keyboardType: TextInputType.number,
-                                          label: "Work hours",
-                                          controller: _workHoursController,
-                                        ),
-                                        MyTextField(
-                                          label: "Work time",
-                                          controller: _workTimeController,
-                                          isDate: true,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  actions: [
-                                    MyButton(
-                                      child: Text('YES'),
-                                      onPressed: () async {
-                                        _createHours();
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    MyButton(
-                                      child: Text('NO'),
-                                      onPressed: () async {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ],
+                      title: 'Work hours',
+                      actions: [],
                       child: MyTable(
                         header: ['id', 'staff id', 'hours', 'time'],
                         data: _list,

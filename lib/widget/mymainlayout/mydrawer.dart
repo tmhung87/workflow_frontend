@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workflow/providers/auth_provider.dart';
 import 'package:workflow/views/evaluation/evaluatepage.dart';
 import 'package:workflow/views/home/homepage.dart';
+import 'package:workflow/views/place/placemanagerpage.dart';
 import 'package:workflow/views/settings/settingspage.dart';
 import 'package:workflow/views/task/taskmanagerpage.dart';
 import 'package:workflow/views/user/usermanagerpage.dart';
@@ -79,6 +80,16 @@ class _MyDrawerState extends State<MyDrawer> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => EvaluatePage()),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('Place manager'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => PlaceManagerPage()),
               );
             },
           ),

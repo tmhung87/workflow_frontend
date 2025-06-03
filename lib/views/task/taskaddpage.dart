@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workflow/providers/task_provider.dart';
 import 'package:workflow/widget/mymainlayout/mainlayout.dart';
 import 'package:workflow/widget/mybutton.dart';
-import 'package:workflow/widget/mydropdownbutton.dart';
+import 'package:workflow/widget/mydropdown.dart';
 import 'package:workflow/widget/mymainlayout/myappbar.dart';
 import 'package:workflow/widget/mytextfield.dart';
 
@@ -86,7 +86,7 @@ class _TaskAddPageState extends State<TaskAddPage> {
                       label: 'Estimated Hours',
                       controller: _estimatedHoursController,
                     ),
-                    MyDropdownButton(
+                    MyDropdown(
                       label: 'Task type',
                       controller: _typeController,
                       items: ['routine', 'irreguler'],

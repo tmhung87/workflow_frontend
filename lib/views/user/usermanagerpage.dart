@@ -10,7 +10,7 @@ import 'package:workflow/widget/mybutton.dart';
 import 'package:workflow/widget/mymainlayout/myappbar.dart';
 import 'package:workflow/widget/mycontainer.dart';
 import 'package:workflow/widget/mymainlayout/mydrawer.dart';
-import 'package:workflow/widget/mydropdownbutton.dart';
+import 'package:workflow/widget/mydropdown.dart';
 import 'package:workflow/widget/mymainlayout/mainlayout.dart';
 import 'package:workflow/widget/mytable.dart';
 import 'package:workflow/widget/mytextfield.dart';
@@ -33,8 +33,9 @@ class _UserManagerPageState extends State<UserManagerPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar:
-            widget.isSelect == true ? null : MyAppBar(label: 'User manager'),
+        appBar: MyAppBar(
+          label: widget.isSelect == true ? 'Select a user' : 'User manager',
+        ),
         drawer: widget.isSelect == true ? null : MyDrawer(),
         body: MainLayout(
           actions: widget.isSelect == true ? null : _actions,
@@ -144,13 +145,13 @@ class _UserManagerPageState extends State<UserManagerPage> {
                     label: 'User name',
                     controller: _userNameController,
                   ),
-                  MyDropdownButton(
+                  MyDropdown(
                     label: 'Division',
                     items: ['Division 1', 'Division 2', 'Division 3'],
 
                     controller: _userDivisionController,
                   ),
-                  MyDropdownButton(
+                  MyDropdown(
                     label: 'Department',
                     items: ['Department 1', 'Department 2', 'Department 3'],
 

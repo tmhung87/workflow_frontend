@@ -3,7 +3,7 @@ import 'package:workflow/models/user.dart';
 import 'package:workflow/widget/mymainlayout/mainlayout.dart';
 import 'package:workflow/widget/mymainlayout/myappbar.dart';
 import 'package:workflow/widget/mybutton.dart';
-import 'package:workflow/widget/mydropdownbutton.dart';
+import 'package:workflow/widget/mydropdown.dart';
 import 'package:workflow/widget/mytextfield.dart';
 
 class UserDetailPage extends StatefulWidget {
@@ -58,12 +58,12 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   ),
                   MyTextField(label: 'Name', controller: _nameController),
 
-                  MyDropdownButton(
+                  MyDropdown(
                     label: 'Division',
                     items: [],
                     controller: _divisionController,
                   ),
-                  MyDropdownButton(
+                  MyDropdown(
                     label: 'Deparment',
                     items: [],
                     controller: _deparmentController,

@@ -1,18 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:workflow/models/user.dart';
-import 'package:workflow/providers/user_provider.dart';
 import 'package:workflow/service/evaluate_api.dart';
-import 'package:workflow/utils/textupper.dart';
-import 'package:workflow/views/user/useraddpage.dart';
-import 'package:workflow/views/user/userconfig.dart';
-import 'package:workflow/views/user/userdetailpage.dart';
-import 'package:workflow/views/user/userimportpage.dart';
 import 'package:workflow/widget/mybutton.dart';
 import 'package:workflow/widget/mymainlayout/myappbar.dart';
 import 'package:workflow/widget/mycontainer.dart';
 import 'package:workflow/widget/mymainlayout/mydrawer.dart';
-import 'package:workflow/widget/mydropdownbutton.dart';
+import 'package:workflow/widget/mydropdown.dart';
 import 'package:workflow/widget/mymainlayout/mainlayout.dart';
 import 'package:workflow/widget/mytable.dart';
 import 'package:workflow/widget/mytextfield.dart';
@@ -25,10 +17,13 @@ class EvaluatePage extends StatefulWidget {
 }
 
 class _EvaluatePageState extends State<EvaluatePage> {
-  final _userNameController = TextEditingController();
+  final _nameController = TextEditingController();
   final _staffIdController = TextEditingController();
-  final _userDivisionController = TextEditingController();
-  final _userDepartmentController = TextEditingController();
+  final _divisionController = TextEditingController();
+  final _departmentController = TextEditingController();
+  final _startTimeController = TextEditingController();
+  final _endTimeController = TextEditingController();
+
   List<Map<String, dynamic>> list = [];
 
   @override
@@ -36,7 +31,9 @@ class _EvaluatePageState extends State<EvaluatePage> {
     return SafeArea(
       child: Scaffold(
         appBar:
-            widget.isSelect == true ? null : MyAppBar(label: 'User manager'),
+            widget.isSelect == true
+                ? null
+                : MyAppBar(label: 'Evaluate manager'),
         drawer: widget.isSelect == true ? null : MyDrawer(),
         body: MainLayout(
           actions: widget.isSelect == true ? null : _actions,
@@ -51,10 +48,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
     List<String> header = [];
     List<List<String>> data = [];
     if (list.isNotEmpty) {
-      header = [
-        "Id",
-        ...list[0].keys.toList().map((e) => formatCamelCase(e)).toList(),
-      ];
+      header = ["Id", ...list[0].keys];
       data =
           list
               .map(
@@ -70,7 +64,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
     }
 
     return MyContainer(
-      title: 'User list',
+      title: 'Evaluate list',
       child:
           list.isNotEmpty
               ? MyTable(
@@ -78,8 +72,8 @@ class _EvaluatePageState extends State<EvaluatePage> {
                 data: data,
 
                 onTap: (index) async {
-                  final res = await EvaluateApiService.fetchReport(
-                    type: data[index][1],
+                  final res = await EvaluateApiService.getEvaluateStaff(
+                    staffId: data[index][1],
                   );
                   list = List.from(res);
                   setState(() {});
@@ -93,23 +87,6 @@ class _EvaluatePageState extends State<EvaluatePage> {
 
   List<Widget> get _actions {
     return [
-      MyButton(
-        child: Text('Daily'),
-        onPressed: () async {
-          final res = await EvaluateApiService.fetchReport(type: 'daily');
-          list = List.from(res);
-          setState(() {});
-        },
-      ),
-      MyButton(
-        child: Text('Monthly'),
-        onPressed: () async {
-          final res = await EvaluateApiService.fetchReport(type: 'monthly');
-          list = List.from(res);
-          setState(() {});
-        },
-      ),
-
       // MyButton(
       //   child: Text('Staff'),
       //   onPressed: () async {
@@ -137,34 +114,66 @@ class _EvaluatePageState extends State<EvaluatePage> {
                     label: 'Staff id',
                     controller: _staffIdController,
                   ),
-                  MyTextField(
-                    label: 'User name',
-                    controller: _userNameController,
-                  ),
-                  MyDropdownButton(
+                  MyTextField(label: 'User name', controller: _nameController),
+                  MyDropdown(
                     label: 'Division',
                     items: ['Division 1', 'Division 2', 'Division 3'],
 
-                    controller: _userDivisionController,
+                    controller: _divisionController,
                   ),
-                  MyDropdownButton(
+                  MyDropdown(
                     label: 'Department',
                     items: ['Department 1', 'Department 2', 'Department 3'],
 
-                    controller: _userDepartmentController,
+                    controller: _departmentController,
+                  ),
+                  MyTextField(
+                    label: 'Start time',
+                    controller: _startTimeController,
+                    isDate: true,
+                  ),
+                  MyTextField(
+                    isDate: true,
+                    label: 'End time',
+                    controller: _endTimeController,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: MyButton(
+                      onPressed: () async {},
+                      child: const Center(child: Text('Search')),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MyButton(
+                      child: Center(child: Text('Daily')),
                       onPressed: () async {
-                        context.read<UserProvider>().findUsers(
+                        final res = await EvaluateApiService.getEvaluateDaily(
                           staffId: _staffIdController.text,
-                          name: _userNameController.text,
-                          division: _userDivisionController.text,
-                          department: _userDepartmentController.text,
+                          name: _nameController.text,
+                          division: _divisionController.text,
+                          department: _departmentController.text,
                         );
+                        list = List.from(res);
+                        setState(() {});
                       },
-                      child: Center(child: Text('Search')),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MyButton(
+                      child: Center(child: Text('Monthly')),
+                      onPressed: () async {
+                        final res = await EvaluateApiService.getEvaluateMonthly(
+                          staffId: _staffIdController.text,
+                          name: _nameController.text,
+                          division: _divisionController.text,
+                          department: _departmentController.text,
+                        );
+                        list = List.from(res);
+                        setState(() {});
+                      },
                     ),
                   ),
                 ],

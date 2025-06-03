@@ -30,23 +30,23 @@ class _MyContainerState extends State<MyContainer> {
         height: widget.height,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(10)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (widget.title != null)
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    isExpanded = !isExpanded;
-                  });
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10)),
+                ),
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      isExpanded = !isExpanded;
+                    });
+                  },
                   child: Row(
                     children: [
                       Expanded(

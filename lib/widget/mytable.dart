@@ -4,6 +4,7 @@ import 'package:excel/excel.dart' hide Border;
 import 'package:flutter/foundation.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:workflow/utils/formatCamelCase.dart';
 import 'package:workflow/widget/myiconbutton.dart';
 
 class MyTable extends StatefulWidget {
@@ -277,7 +278,7 @@ class _MyTableState extends State<MyTable> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(4.0),
                                       child: Text(
-                                        e,
+                                        formatCamelCase(e),
                                         style: TextStyle(
                                           overflow: TextOverflow.ellipsis,
                                           color:

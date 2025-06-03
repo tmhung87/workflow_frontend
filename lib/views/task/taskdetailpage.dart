@@ -5,7 +5,7 @@ import 'package:workflow/providers/task_provider.dart';
 import 'package:workflow/widget/mymainlayout/mainlayout.dart';
 import 'package:workflow/widget/mymainlayout/myappbar.dart';
 import 'package:workflow/widget/mybutton.dart';
-import 'package:workflow/widget/mydropdownbutton.dart';
+import 'package:workflow/widget/mydropdown.dart';
 import 'package:workflow/widget/mytextfield.dart';
 
 class TaskDetailPage extends StatefulWidget {
@@ -46,7 +46,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         actions: [
           MyButton(
             onPressed: () async {
-              return await context.read<TaskProvider>().updateTask(
+              print(_pointController.text);
+              await context.read<TaskProvider>().updateTask(
                 Task(
                   taskId: widget.task.taskId,
                   title: _titleController.text,
@@ -88,12 +89,12 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     label: 'TaskTime',
                     controller: _tasktimeController,
                   ),
-                  MyDropdownButton(
+                  MyDropdown(
                     label: 'Type',
                     controller: _typeController,
                     items: ['routine', 'irregular'],
                   ),
-                  MyDropdownButton(
+                  MyDropdown(
                     label: 'Status',
                     controller: _statusController,
                     items: ['active', 'inactive'],

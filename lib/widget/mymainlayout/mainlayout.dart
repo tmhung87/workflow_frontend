@@ -52,7 +52,12 @@ class _MainLayoutState extends State<MainLayout> {
           children: [
             if (actions.isNotEmpty)
               Container(
-                decoration: BoxDecoration(color: Colors.grey.shade300),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: Colors.grey.shade300),
+                  ),
+                ),
+                // decoration: BoxDecoration(color: Colors.grey.shade300),
                 child: SizedBox(
                   width: double.infinity,
                   child: SingleChildScrollView(

@@ -9,7 +9,7 @@ import 'package:workflow/views/work/workdetailpage.dart';
 import 'package:workflow/views/work/workreportpage.dart';
 import 'package:workflow/widget/mybutton.dart';
 import 'package:workflow/widget/mycontainer.dart';
-import 'package:workflow/widget/mydropdownbutton.dart';
+import 'package:workflow/widget/mydropdown.dart';
 import 'package:workflow/widget/myloadingwidget.dart';
 import 'package:workflow/widget/mymainlayout/mainlayout.dart';
 import 'package:workflow/widget/mymainlayout/myappbar.dart';
@@ -126,7 +126,7 @@ class _WorkManagerPageState extends State<WorkManagerPage> {
                     label: 'Assigned',
                     controller: _assignedController,
                   ),
-                  MyDropdownButton(
+                  MyDropdown(
                     label: 'Status',
                     controller: _statusController,
                     items: [

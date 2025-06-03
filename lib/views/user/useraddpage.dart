@@ -4,7 +4,7 @@ import 'package:workflow/models/user.dart';
 import 'package:workflow/providers/user_provider.dart';
 import 'package:workflow/widget/mymainlayout/mainlayout.dart';
 import 'package:workflow/widget/mybutton.dart';
-import 'package:workflow/widget/mydropdownbutton.dart';
+import 'package:workflow/widget/mydropdown.dart';
 import 'package:workflow/widget/mymainlayout/myappbar.dart';
 import 'package:workflow/widget/mytextfield.dart';
 
@@ -89,19 +89,19 @@ class _UserAddPageState extends State<UserAddPage> {
                       label: 'Password',
                       controller: _passwordController,
                     ),
-                    MyDropdownButton(
+                    MyDropdown(
                       label: 'Division',
                       items: ['Division 1', 'Division 2', 'Division 3'],
 
                       controller: _divisionController,
                     ),
-                    MyDropdownButton(
+                    MyDropdown(
                       label: 'Department',
                       items: ['Department 1', 'Department 2', 'Department 3'],
 
                       controller: _departmentController,
                     ),
-                    MyDropdownButton(
+                    MyDropdown(
                       label: 'Role',
                       items: ['Role 1', 'Role 2', 'Role 3'],
 
