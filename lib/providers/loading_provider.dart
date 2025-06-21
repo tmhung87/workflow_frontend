@@ -14,7 +14,7 @@ class LoadingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Map<String, dynamic> _map = {};
+  final Map<String, dynamic> _map = {};
   Map<String, dynamic> get map => _map;
   void update(Map<String, dynamic> map) {
     _map.clear();

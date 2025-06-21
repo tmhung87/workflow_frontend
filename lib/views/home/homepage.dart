@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workflow/widget/mymainlayout/myappbar.dart';
 import 'package:workflow/widget/mymainlayout/mydrawer.dart';
 
@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   String name = '';
   String email = '';
   void getUser() async {
-    final staffId = await FlutterSecureStorage().read(key: 'staffId');
+    final staffId = (await SharedPreferences.getInstance()).getString( 'staffId');
     setState(() {
       name = staffId ?? '';
     });

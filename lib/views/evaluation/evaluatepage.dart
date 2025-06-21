@@ -57,7 +57,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
                   ...e.values
                       .toList()
                       .map((f) => (f ?? '').toString())
-                      .toList(),
+                      ,
                 ],
               )
               .toList();

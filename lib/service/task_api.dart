@@ -1,14 +1,14 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'package:workflow/models/task.dart';
 
 class TaskApiService {
   static final String _apiUrl =
-      dotenv.env['URL'] ?? 'http://localhost:3000/api';
+      'http://146.196.64.84/api/api';
 
   static Future<Map<String, dynamic>> gettask() async {
     final response = await http.get(Uri.parse('$_apiUrl/task'));
@@ -64,8 +64,8 @@ class TaskApiService {
   }
 
   static Future<Response> findTask({String? title, String? description}) async {
-    var storage = FlutterSecureStorage();
-    var token = await storage.read(key: 'token');
+    final storage = await SharedPreferences.getInstance();
+    var token = storage.getString( 'token');
     final response = await http.post(
       Uri.parse('$_apiUrl/task/find'),
       headers: {

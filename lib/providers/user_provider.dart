@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workflow/models/user.dart';
 import 'package:workflow/service/user_api.dart';
 
@@ -34,8 +34,8 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> createUser(User user) async {
-    final storage = FlutterSecureStorage();
-    final token = await storage.read(key: 'token');
+    final storage = await SharedPreferences.getInstance();
+    final token = storage.getString( 'token');
     if (token == null) {
       return {};
     }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workflow/widget/mybutton.dart';
 import '../../providers/auth_provider.dart';
 
@@ -24,9 +24,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _checklogin() async {
-    var storage = FlutterSecureStorage();
-    var staffId = await storage.read(key: 'staffId');
-    var password = await storage.read(key: 'password');
+    var storage = await SharedPreferences.getInstance();
+    var staffId = storage.getString( 'staffId');
+    var password =  storage.getString( 'password');
     _staffIdController.text = staffId ?? '';
     _passwordController.text = password ?? '';
     if (staffId != null && password != null) {

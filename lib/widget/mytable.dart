@@ -32,12 +32,12 @@ class MyTable extends StatefulWidget {
 class _MyTableState extends State<MyTable> {
   int _columnIndex = 0;
   double _totalWidth = 0;
-  Map<int, double> _columnWidths = {};
+  final Map<int, double> _columnWidths = {};
   List<List<String>> _data = [];
   bool _isSort = true;
   String _query = '';
   int _selectFilterIndex = 0;
-  Map<int, double> _dx = {};
+  final Map<int, double> _dx = {};
   final _scrollControler = ScrollController();
   int _count = 0;
   @override

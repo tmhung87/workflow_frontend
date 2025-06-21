@@ -23,7 +23,7 @@ class PushProgressWidget<T> extends StatefulWidget {
 class _PushProgressWidgetState<T> extends State<PushProgressWidget<T>> {
   int _current = 0;
   bool _isRunning = false;
-  List<String> _errors = [];
+  final List<String> _errors = [];
 
   @override
   void initState() {

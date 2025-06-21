@@ -100,14 +100,14 @@ class _WorkReportPageState extends State<WorkReportPage> {
                         return [
                           (works.indexOf(work) + 1).toString(),
                           work.workId.toString(),
-                          work.task?.title ?? '',
-                          work.task?.description ?? '',
+                          work.task.title ?? '',
+                          work.task.description ?? '',
                           // work.task?.point.toString() ?? '',
                           // work.task?.estimatedHours.toString() ?? '',
                           work.createdBy ?? '',
                           work.assigned ?? '',
-                          work.percent?.toString() ?? '',
-                          work.actualHours?.toString() ?? '',
+                          work.percent.toString() ?? '',
+                          work.actualHours.toString() ?? '',
                           work.remark ?? '',
                           work.status ?? '',
                         ];

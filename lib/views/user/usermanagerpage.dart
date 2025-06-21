@@ -27,7 +27,7 @@ class _UserManagerPageState extends State<UserManagerPage> {
   final _staffIdController = TextEditingController();
   final _userDivisionController = TextEditingController();
   final _userDepartmentController = TextEditingController();
-  List<User> _users = [];
+  final List<User> _users = [];
 
   @override
   Widget build(BuildContext context) {

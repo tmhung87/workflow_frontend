@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workflow/models/user.dart';
 import 'package:workflow/service/auth_api.dart';
 import 'package:workflow/views/auth/loginpage.dart';
 import 'package:workflow/views/home/homepage.dart';
 
 class AuthProvider with ChangeNotifier {
-  final FlutterSecureStorage _storage = FlutterSecureStorage(); // Khởi tạo sẵn
   User? _auth;
   User? get auth => _auth;
 
@@ -17,6 +16,8 @@ class AuthProvider with ChangeNotifier {
     String staffId,
     String password,
   ) async {
+  final SharedPreferences storage = await SharedPreferences.getInstance(); // Khởi tạo sẵn
+
     final response = await AuthApiService.login(
       staffId.toUpperCase(),
       password,
@@ -24,9 +25,9 @@ class AuthProvider with ChangeNotifier {
     final map = jsonDecode(response.body);
 
     if (map['state'] == true) {
-      await _storage.write(key: 'token', value: map['token']);
-      await _storage.write(key: 'name', value: staffId.toUpperCase());
-      await _storage.write(key: 'password', value: password);
+      await storage.setString( 'token',  map['token']);
+      await storage.setString( 'name',  staffId.toUpperCase());
+      await storage.setString( 'password',  password);
       _auth = User.fromJson(map['user']);
       Navigator.pushAndRemoveUntil(
         context,
@@ -37,8 +38,9 @@ class AuthProvider with ChangeNotifier {
   }
 
   void logout(BuildContext context) async {
-    await _storage.delete(key: 'token'); // Xóa token khi logout
-    await _storage.delete(key: 'password');
+      final SharedPreferences storage = await SharedPreferences.getInstance(); // Khởi tạo sẵn
+    await storage.remove( 'token'); // Xóa token khi logout
+    await storage.remove( 'password');
     _auth = null;
     Navigator.pushAndRemoveUntil(
       context,

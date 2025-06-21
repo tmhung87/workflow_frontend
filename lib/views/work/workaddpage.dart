@@ -4,7 +4,6 @@ import 'package:workflow/models/task.dart';
 import 'package:workflow/models/user.dart';
 import 'package:workflow/models/work.dart';
 import 'package:workflow/providers/auth_provider.dart';
-import 'package:workflow/providers/work_provider.dart';
 import 'package:workflow/service/work_api.dart';
 import 'package:workflow/views/task/taskmanagerpage.dart';
 import 'package:workflow/views/user/usermanagerpage.dart';

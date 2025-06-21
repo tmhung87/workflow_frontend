@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:workflow/models/work.dart';
-import 'package:workflow/providers/work_provider.dart';
 import 'package:workflow/service/work_api.dart';
 import 'package:workflow/views/work/workaddpage.dart';
 import 'package:workflow/views/work/workdetailpage.dart';
@@ -170,14 +168,14 @@ class _WorkManagerPageState extends State<WorkManagerPage> {
                                 return [
                                   (works.indexOf(work) + 1).toString(),
                                   work.workId.toString(),
-                                  work.task?.title ?? '',
-                                  work.task?.description ?? '',
+                                  work.task.title ?? '',
+                                  work.task.description ?? '',
                                   // work.task?.point.toString() ?? '',
                                   // work.task?.estimatedHours.toString() ?? '',
                                   work.createdBy ?? '',
                                   work.assigned ?? '',
-                                  work.percent?.toString() ?? '',
-                                  work.actualHours?.toString() ?? '',
+                                  work.percent.toString() ?? '',
+                                  work.actualHours.toString() ?? '',
                                   work.remark ?? '',
                                   work.status ?? '',
                                 ];

@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workflow/models/hour.dart';
 
 class HourApiService {
   static final String _baseUrl =
-      dotenv.env['URL'] ?? 'http://localhost:3000/api';
-  static final _storage = FlutterSecureStorage();
+      'http://146.196.64.84/api/api';
 
   static Future<String?> _getToken() async {
-    return await _storage.read(key: 'token');
+    final storage = await SharedPreferences.getInstance();
+    return storage.getString( 'token');
   }
 
   static Map<String, String> _headers(String token) => {

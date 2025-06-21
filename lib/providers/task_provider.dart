@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workflow/models/task.dart';
 import 'package:workflow/service/task_api.dart';
 
@@ -26,8 +26,8 @@ class TaskProvider extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> createtask(Task task) async {
-    final storage = FlutterSecureStorage();
-    final token = await storage.read(key: 'token');
+    final storage = await SharedPreferences.getInstance();
+    final token = storage.getString( 'token');
     if (token == null) {
       return {};
     }
@@ -36,8 +36,8 @@ class TaskProvider extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> deleteTask(int id) async {
-    final storage = FlutterSecureStorage();
-    final token = await storage.read(key: 'token');
+    final storage = await SharedPreferences.getInstance();
+    final token = storage.getString( 'token');
     if (token == null) {
       return {};
     }
@@ -46,8 +46,8 @@ class TaskProvider extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> updateTask(Task task) async {
-    final storage = FlutterSecureStorage();
-    final token = await storage.read(key: 'token');
+    final storage = await SharedPreferences.getInstance();
+    final token = storage.getString( 'token');
     if (token == null) {
       return {};
     }

@@ -20,7 +20,7 @@ class _MyAppBarState extends State<MyAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text('${widget.label}'),
+      title: Text(widget.label),
       actions: [
         Consumer<AuthProvider>(
           builder:
@@ -33,7 +33,7 @@ class _MyAppBarState extends State<MyAppBar> {
                     children: [
                       Icon(Icons.person),
                       SizedBox(width: 8),
-                      Text('${value.auth!.staffId}'),
+                      Text(value.auth!.staffId),
                     ],
                   ),
                 ),
